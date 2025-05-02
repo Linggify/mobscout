@@ -2,9 +2,12 @@ package de.ortelt.mc.mobscout;
 
 import com.mojang.logging.LogUtils;
 import de.ortelt.mc.mobscout.entity.AnimalTrackEntity;
+import de.ortelt.mc.mobscout.item.DecoyWhistle;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -36,12 +39,16 @@ public class Mobscout {
 
     // Create a Deferred Register to hold Items which will all be registered under the "mobscout" namespace
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, MODID);
+    public static final RegistryObject<Item> DECOY_WHISTLE = ITEMS.register("decoy_whistle", DecoyWhistle::new);
 
     public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, MODID);
     public static final RegistryObject<EntityType<?>> ANIMAL_TRACK_ENTITY = AnimalTrackEntity.register(ENTITY_TYPES);
 
     // Create a Deferred Register to hold CreativeModeTabs which will all be registered under the "mobscout" namespace
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
+    public static final RegistryObject<CreativeModeTab> MOBSCOUT_TAB = CREATIVE_MODE_TABS.register("mobscout", () -> CreativeModeTab.builder().withTabsBefore(CreativeModeTabs.COMBAT).icon(() -> DECOY_WHISTLE.get().getDefaultInstance()).displayItems((parameters, output) -> {
+        output.accept(DECOY_WHISTLE.get()); // Add the example item to the tab. For your own tabs, this method is preferred over the event
+    }).build());
 
     public Mobscout(FMLJavaModLoadingContext context) {
         IEventBus modEventBus = context.getModEventBus();
