@@ -1,0 +1,1 @@
+package de.ortelt.mc.mobscout.mixin;
